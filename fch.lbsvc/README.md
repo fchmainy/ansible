@@ -1,54 +1,62 @@
-# bigip-ansible-virtualserver
-Ansible role to configure nodes/pools and virtual server on the BIG-IP
+# lbsvc
+This is a simple role to create a simple Load Balancing Configuration on F5 Load balancer using f5 Provided/Supported Ansible Libraries
 
-This is a workflow to
-* Add nodes to the BIG-IP
-* Add a pool to the BIG-IP
-* Add nodes to the Pool
-* Add a virtual server
+## Pre-Requisites
+* Ansible up and running (meaning with the following pip'installed: f5-sdk, bigsuds, netaddr)
+* Ansible v2.4+
+* BigIP already licenced and onboarded
 
-## Requirements
-* This role requires Ansible 2.4
-* BIG-IP is licensed
-* Packages to be installed
-  - pip install f5-sdk
-  - pip install bigsuds
-  - pip install netaddr
+## What does it perform:
+* Creates :
+** nodes
+** pool
+** pool members
+** redirect VS (using the redirect iRule)
+** HTTPS VS (using an already SSL Client Profile)
 
-## Role Variables
-The variables that can be passed to this role and a brief description about them are as follows.
+## Variables
+Any variables could be added to the "default" variables file () 
 
 ```
 username: "admin"
-password: "admin"
+password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          3386163836303830393436623231646338616665363030303639363666656464636639336335
+          330346663661386166396432383430313137346436620a636264303263353165313666356238
+          6433663032306161303633633438333336343331613439383130306162356466646133373764
+          623961326765380a316335313364633362353764343130303636643961373337383163303935
+          3162
 
-pool_name: "web-pool"
-
-vip_name: "http_virtual_server"
-vip_port: "80"
-vip_ip: "10.168.68.143"
+app_name: "myApp"
+pool_name: "{{ app_name }}_pool"
+redirect_port: "80"
+vip_ip: "10.100.26.143"
+vip_port: "443"
 
 pool_members:
 - port: "80"
-  host: "192.168.68.160"
+  host: "10.100.26.144"
 - port: "80"
-  host: "192.168.68.161"
+  host: "10.100.26.145"
+
 ```
 
-## Example Playbook
+## Playbook
 ```
-- hosts: bigip
+---
+- name: Configure http service
+  hosts: prod
   gather_facts: false
   roles:
-  - { role: f5devcentral.bigip-ansible-virtualserver }
+    - { role: fch.lbsvc }
 
 ```
 
-## Sample inventory file
+## Inventory
 
 ```
-[bigip]
-10.20.30.40
+[prod]
+192.168.1.143
 ```
 
 ## Credential storage
