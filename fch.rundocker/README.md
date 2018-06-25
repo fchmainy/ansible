@@ -1,38 +1,51 @@
-Role Name
-=========
+# lbsvc
+This is a simple role to create a simple Load Balancing Configuration on F5 Load balancer using f5 Provided/Supported Ansible Libraries
 
-A brief description of the role goes here.
+## Pre-Requisites
+* Ansible up and running (meaning with the following pip'installed: f5-sdk, bigsuds, netaddr)
+* Ansible v2.4+
+* BigIP already licenced and onboarded
 
-Requirements
-------------
+## What does it perform:
+* Gets any container from a local registry or from Docker Hub (here it takes the simple but nice "f5devcentral/f5-demo-app" container
+* Loops on every container ports listed to create independant running containers.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Variables
+Any variables could be added to the "vars" variables file ()
 
-Role Variables
---------------
+```
+---
+# vars file for fch.run_docker
+remote_user: "fchmainy"
+docker_name: "f5devcentral/f5-demo-app"
+svc_name: "myapp"
+internal_port: "80"
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```
 
-Dependencies
-------------
+## Playbook
+```
+---
+- hosts: me
+  remote_user: fchmainy
+  strategy: debug
+  gather_facts: yes
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+  vars:
+    container_ports:
+      - "9081"
+      - "9082"
+      - "9083"
 
-Example Playbook
-----------------
+  roles:
+    - { role: fch.run_docker2, become: yes, myports: "{{ container_ports }}" }
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Inventory
 
-License
--------
+```
+[me]
+127.0.0.1
+```
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
