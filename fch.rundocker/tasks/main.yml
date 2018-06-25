@@ -1,0 +1,10 @@
+---
+
+  - name: create and run a docker container
+    docker_container:
+      name: "{{ svc_name }}_{{ item }}"
+      image: "{{ docker_name }}"
+      state: started
+      ports: "{{ item }}:{{ internal_port }}"
+    with_items: "{{ myports }}"
+    delegate_to: localhost

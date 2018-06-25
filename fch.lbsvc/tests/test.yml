@@ -1,0 +1,6 @@
+---
+- name: Configure http service
+  hosts: prod
+  gather_facts: false
+  roles:
+    - { role: fch.lbsvc }

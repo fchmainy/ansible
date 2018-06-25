@@ -1,0 +1,6 @@
+---
+# vars file for fch.run_docker
+remote_user: "fchmainy"
+docker_name: "f5devcentral/f5-demo-app"
+svc_name: "myapp"
+internal_port: "80"
