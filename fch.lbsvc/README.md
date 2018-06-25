@@ -8,11 +8,11 @@ This is a simple role to create a simple Load Balancing Configuration on F5 Load
 
 ## What does it perform:
 * Creates :
-** nodes
-** pool
-** pool members
-** redirect VS (using the redirect iRule)
-** HTTPS VS (using an already SSL Client Profile)
+- nodes
+- pool
+- pool members
+- redirect VS (using the redirect iRule)
+- HTTPS VS (using an already SSL Client Profile)
 
 ## Variables
 Any variables could be added to the "default" variables file () 
@@ -60,22 +60,29 @@ pool_members:
 ```
 
 ## Credential storage
+You can either create a vault encrypted file or an encrypted string within your variable files so you do not disclose your confidential data (such as your BigIP password).
+(https://docs.ansible.com/ansible/2.4/vault.html)
 
-Because this role includes usage of credentials to access your BIG-IP, I recommend that you supply these variables in an ansible-vault encrypted file.
+How to encrypt a complete file?
+- Store your passwords in a file - '~/.encrypted_passwords.txt'
+- Execute playbook as follows - ansible-vault encrypt <<variable_filename>> --vault-password-file ~/.encrypted_password.txt
 
-This can be supplied out-of-band of this role
+How to encrypt a single value?
+- encrypt your password using the following command: ansible-vault encrypt_string --vault-id a_password_file 'foobar' --name 'the_secret'
+- then use it as a single entry in your variable file:
+```
+some_foo: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62313365396662343061393464336163383764373764613633653634306231386433626436623361
+      6134333665353966363534333632666535333761666131620a663537646436643839616531643561
+      63396265333966386166373632626539326166353965363262633030333630313338646335303630
+      3438626666666137650a353638643435666633633964366338633066623234616432373231333331
+      6564
+```
 
-Steps:
-- Store your vault password in a file - '~/.vault_pass.txt'
-- Execute playbook as follows - ansible-vault encrypt <<variable_filename>> --vault-password-file ~/.vault_pass.txt
+Decryption is specified when you run the playbook by adding the --ask-vault-pass or --vault-password-file attribute to your command.
 
-For more information refer to: http://docs.ansible.com/ansible/latest/playbooks_vault.html
-
-## Certificate validation
-To validate the SSL certificates of the BIG-IP REST API
-- set validate_certs: true
-- Generate a public private key pair
-- Store the public key on BIG-IP (https://support.f5.com/csp/article/K13454#bigipsshdaccept)
+For more information refer to: https://docs.ansible.com/ansible/2.4/vault.html
 
 ## Credits
 https://github.com/F5Networks/f5-ansible
