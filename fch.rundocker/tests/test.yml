@@ -11,4 +11,4 @@
       - "9083"
 
   roles:
-    - { role: fch.run_docker2, become: yes, myports: "{{ container_ports }}" }
+    - { role: fch.rundocker, become: yes, myports: "{{ container_ports }}" }
