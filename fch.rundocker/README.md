@@ -1,4 +1,4 @@
-# lbsvc
+# rundocker
 This is a simple role to create a simple Load Balancing Configuration on F5 Load balancer using f5 Provided/Supported Ansible Libraries
 
 ## Pre-Requisites
@@ -6,7 +6,7 @@ This is a simple role to create a simple Load Balancing Configuration on F5 Load
 * Ansible v2.4+
 * BigIP already licenced and onboarded
 
-## What does it perform:
+## What does it do?
 * Gets any container from a local registry or from Docker Hub (here it takes the simple but nice "f5devcentral/f5-demo-app" container
 * Loops on every container ports listed to create independant running containers.
 
@@ -15,7 +15,7 @@ Any variables could be added to the "vars" variables file ()
 
 ```
 ---
-# vars file for fch.run_docker
+# vars file for fch.rundocker
 remote_user: "fchmainy"
 docker_name: "f5devcentral/f5-demo-app"
 svc_name: "myapp"
@@ -38,7 +38,7 @@ internal_port: "80"
       - "9083"
 
   roles:
-    - { role: fch.run_docker2, become: yes, myports: "{{ container_ports }}" }
+    - { role: fch.rundocker, become: yes, myports: "{{ container_ports }}" }
 
 ```
 
