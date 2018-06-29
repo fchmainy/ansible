@@ -5,6 +5,7 @@
       name: "{{ svc_name }}_{{ item }}"
       image: "{{ docker_name }}"
       state: started
+      ipv4_address: "{{ docker_ip }}"
       ports: "{{ item }}:{{ internal_port }}"
     with_items: "{{ myports }}"
     delegate_to: localhost
